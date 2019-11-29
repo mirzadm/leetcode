@@ -1,9 +1,24 @@
+"""Problem 1106: Parsing a boolean expression."""
 
-def parse_boolean_expr(expr_str):
+from typing import List
+
+
+def parse_boolean_expr(expression: str) -> bool:
+    """Parses and calculates a boolean expression.
+
+    Assumes expression is correctly formatted (operators, operators, balanced
+    parentheses).
+
+    Args:
+        `expression`: String boolean expression. Supported operators: !, &, |.
+            Supported operands: f, t.
+    Returns:
+        Boolean value of `expression`.
+    """
     stack = []
-    items_to_skip = (",", "(", ")")
+    items_to_skip = (" ", ",", "(", ")")
     operators = ("!", "&", "|")
-    for item in expr_str:
+    for item in expression:
         if item not in items_to_skip:
             stack.append(item)
         if item == ")":
@@ -18,23 +33,30 @@ def parse_boolean_expr(expr_str):
     return result == "t"
 
 
-def calculate_boolean_operation(operator, operands):
+def calculate_boolean_operation(operator: str, operands: List[str]) -> str:
+    """Calculates result of `operator` applied on `operands`.
+
+    Args:
+        `expression`: String boolean expression.
+            Supported operators: !, &, |
+            Supported operands: f, t
+    Returns:
+        Corresponding character for boolean result: "f" or "t"
+    """
     if operator == "!":
-        if operands[0] == "f":
-            return "t"
-        else:
-            return "f"
-    if operator == "&":
+        result = "t"
+        if operands[0] == "t":
+            result = "f"
+    elif operator == "&":
         result = "t"
         for item in operands:
             if item == "f":
                 result = "f"
                 break
-        return result
-    if operator == "|":
+    elif operator == "|":
         result = "f"
         for item in operands:
             if item == "t":
                 result = "t"
                 break
-        return result
+    return result

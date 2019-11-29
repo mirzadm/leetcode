@@ -25,8 +25,8 @@ class TestCases(unittest.TestCase):
         self.assertTrue(parse("t"))
         self.assertFalse(parse("f"))
 
-        self.assertTrue(parse("!(f)"))
         self.assertFalse(parse("!(t)"))
+        self.assertTrue(parse("!(f)"))
 
         self.assertFalse(parse("&(f,f)"))
         self.assertFalse(parse("&(f,t)"))
@@ -38,4 +38,4 @@ class TestCases(unittest.TestCase):
         self.assertTrue(parse("|(t,f)"))
         self.assertTrue(parse("|(t,t)"))
 
-        self.assertTrue("&(!(!(t)),!(|(f,f)),t)")
+        self.assertTrue("&(!(!(t)), !(|(f, f)), t)")
