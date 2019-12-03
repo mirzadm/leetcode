@@ -25,7 +25,7 @@ def remove_k_digits(num: str, digits_to_remove: int) -> str:
                 i -= 1
         else:
             i += 1
-    return num
+    return str(int(num)) # Remove leading zeros
 
 
 ##############################################################################
@@ -39,7 +39,7 @@ def remove_k_digits_n2(num: str, digits_to_remove: int) -> str:
         return "0"
     for i in range(digits_to_remove):
         num = remove_one_digit(num)
-    return num
+    return str(int(num)) # Remove leading zeros
 
 
 def remove_one_digit(num: str) -> str:
