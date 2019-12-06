@@ -1,6 +1,6 @@
 """Problem 188. Best Time to Buy and Sell Stock IV."""
 
-from typing import List
+from typing import List, Tuple
 
 
 def max_profit(max_transactions: int, prices: List[int]) -> int:
@@ -12,25 +12,35 @@ def max_profit(max_transactions: int, prices: List[int]) -> int:
         2- Must sell before buying new stocks
 
     Args:
-        `prices`: List of daily stock prices.
+        `price`: List of daily stock prices.
     Returns:
         Max profit in buying and selling stocks.
     """
-    if not prices:
+    price_intervals = parse_intervals(prices)
+    if len(price_intervals) == 0:
         return 0
-    left = 0
-    i = 0
-    profits = []
-    while True:
-        while i < len(prices) - 1 and prices[i] > prices[i + 1]:
-            i += 1
-        if i == len(prices) - 1:
-            break
-        left = i
-        while i < len(prices) - 1 and prices[i] <= prices[i + 1]:
-            i += 1
-        profits.append(prices[i] - prices[left])
-        if i == len(prices) - 1:
-            break
-    sorted_profits = sorted(profits, reverse=True)
-    return sum(sorted_profits[:max_transactions])
+    if len(price_intervals) < max_transactions:
+        max_transactions = len(price_intervals)
+    return max_profit_helper(max_transactions, price_intervals)
+
+
+def max_profit_helper(
+    max_transactions: int, price_intervals: List[Tuple[int]]
+) -> int:
+    """Helper to calculate max profit in buying and selling stocks."""
+    max_profit_value = 0
+    for left in range(len(price_intervals) - max_transactions + 1):
+        for right in range(left, len(price_intervals) - max_transactions + 1):
+            if price_intervals[right][1] > price_intervals[left][0]:
+                profit = price_intervals[right][1] - price_intervals[left][0]
+                if max_transactions > 1:
+                    profit += max_profit_helper(
+                        max_transactions - 1, price_intervals[right + 1:]
+                    )
+                if profit > max_profit_value:
+                    max_profit_value = profit
+    return max_profit_value
+
+
+def parse_intervals(prices: List[int]) -> List[Tuple[int]]:
+    """Parses prices into ascending price intervals."""
