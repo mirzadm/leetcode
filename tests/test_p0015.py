@@ -2,6 +2,7 @@ import unittest
 from src.p0015_sum_of_three import (
     sum_of_three_brute_force as sum_n3,
     sum_of_three_n2 as sum_n2,
+    sum_of_three_n2_sorted as sum_n2_sorted,
 )
 
 
@@ -21,3 +22,11 @@ class TestCases(unittest.TestCase):
         self.assertEqual(sum_n2([0, 0, 0]), [[0, 0, 0]])
         self.assertEqual(sum_n2([-1, -1, 2]), [[-1, -1, 2]])
         self.assertEqual(sum_n2([-1, -1, 2, 1, 0, -1]), [[-1, -1, 2], [-1, 0, 1]])
+
+    def test_sum_n2_sorted(self):
+        self.assertEqual(sum_n2_sorted([]), [])
+        self.assertEqual(sum_n2_sorted([1]), [])
+        self.assertEqual(sum_n2_sorted([1, 2]), [])
+        self.assertEqual(sum_n2_sorted([0, 0, 0]), [[0, 0, 0]])
+        self.assertEqual(sum_n2_sorted([-1, -1, 2]), [[-1, -1, 2]])
+        self.assertEqual(sum_n2_sorted([-1, -1, 2, 1, 0, -1]), [[-1, -1, 2], [-1, 0, 1]])

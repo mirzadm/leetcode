@@ -42,3 +42,32 @@ def sum_of_three_n2(nums):
                     triplets.add(triplet)
     triplets_list = [list(t) for t in triplets]
     return triplets_list
+
+
+def sum_of_three_n2_sorted(nums):
+    if len(nums) < 3:
+        return []
+    counts = defaultdict(int)
+    for num in nums:
+        counts[num] += 1
+    nums.append(0)
+    nums = sorted(nums)
+    first_zero = nums.index(0)
+    positives = nums[first_zero + 1:]
+    negatives = nums[: first_zero]
+    triplets = set()
+    for neg in negatives:
+        for pos in positives:
+            lookup_value = -(neg + pos)
+            if lookup_value in counts:
+                if (
+                    lookup_value not in (neg, pos)
+                    or lookup_value == neg and counts[neg] >= 2
+                    or lookup_value == pos and counts[pos] >= 2
+                ):
+                    triplet = tuple(sorted((lookup_value, neg, pos)))
+                    triplets.add(triplet)
+    if 0 in counts and counts[0] >= 3:
+        triplets.add((0, 0, 0))
+    triplets_list = [list(t) for t in triplets]
+    return triplets_list
