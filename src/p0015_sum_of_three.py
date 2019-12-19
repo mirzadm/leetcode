@@ -44,17 +44,18 @@ def sum_of_three_n2(nums):
     return triplets_list
 
 
-def sum_of_three_n2_sorted(nums):
+def sum_of_three_n2_partition(nums):
     if len(nums) < 3:
         return []
     counts = defaultdict(int)
+    positives = []
+    negatives = []
     for num in nums:
+        if num >=0:
+            positives.append(num)
+        else:
+            negatives.append(num)
         counts[num] += 1
-    nums.append(0)
-    nums = sorted(nums)
-    first_zero = nums.index(0)
-    positives = nums[first_zero + 1:]
-    negatives = nums[: first_zero]
     triplets = set()
     for neg in negatives:
         for pos in positives:
