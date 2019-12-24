@@ -4,7 +4,7 @@ from random import randrange
 
 
 class ListNode:
-    def __init__(self, value):
+    def __init__(self, value: int):
         self.value = value
         self.next = None
 
@@ -13,7 +13,15 @@ class RandomNode:
     def __init__(self, head: ListNode):
         self.head = head
 
-    def random_node(self):
+    def random_node(self, rand_func=randrange) -> int:
+        """Returns a random value from linked list.
+
+        Args:
+            `rand_func`: Optional random generator function as an argument.
+                It allows for mocking the random generator in unit testing.
+        Returns:
+            Random value from linked list (integer).
+        """
         faster = self.head
         slower = self.head
         k = 0
@@ -25,7 +33,7 @@ class RandomNode:
             n = 2 * k
         else:
             n = 2 * k + 1
-        random_index = randrange(n)
+        random_index = rand_func(n)
         if random_index <= n / 2:
             pointer = self.head
         else:

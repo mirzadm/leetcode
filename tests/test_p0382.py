@@ -11,4 +11,5 @@ class TestCases(unittest.TestCase):
 
     def test_random_node(self):
         self.assertEqual(self.one_element.random_node(), 1)
-        self.assertIn(self.two_element.random_node(), {1, 2})
+        self.assertEqual(self.two_element.random_node(rand_func=lambda x: 0), 1)
+        self.assertEqual(self.two_element.random_node(rand_func=lambda x: 1), 2)
