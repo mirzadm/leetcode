@@ -1,7 +1,7 @@
 """Problem 416. Partition Equal Subset Sum"""
 
-from collections import defaultdict
 from typing import List
+
 
 def partition_equal_subset_sum(nums: List[int]) -> bool:
     """Checks if array can be partitioned into two subsets of equal sum.
@@ -14,39 +14,24 @@ def partition_equal_subset_sum(nums: List[int]) -> bool:
     Returns:
         True if there is a way to partition the list otherwise false.
     """
-    total = sum(nums)
-    if total == 0 or total % 2 == 1:
+    if not nums:
+        return True
+    nums_sum = sum(nums)
+    if nums_sum % 2 == 1:
         return False
-    partition_a = defaultdict(int)
-    partition_b = defaultdict(int)
-    for num in nums:
-        partition_a[num] += 1;
-    sum_a = total
-    sum_b = 0
-    states = set()
-    while (sum_a != sum_b and sum_a not in states and sum_b not in states):
-        states.update((sum_a, sum_b))
-        if sum_a > sum_b:
-            next_element = find_nearest_element(partition_a, (sum_a - sum_b) / 2)
-            partition_a[next_element] -= 1
-            partition_b[next_element] += 1
-            sum_a -= next_element
-            sum_b += next_element
-        else:
-            next_element = find_nearest_element(partition_b, (sum_b - sum_a) / 2)
-            partition_b[next_element] -= 1
-            partition_a[next_element] += 1
-            sum_b -= next_element
-            sum_a += next_element
-    return sum_a == sum_b
+    cache = {}
+    return can_partition(nums, len(nums) - 1, nums_sum / 2, cache)
 
 
-def find_nearest_element(partition: defaultdict, target: int) -> int:
-    """Finds the closest element to `target` in `subset`."""
-    i = 0
-    while True:
-        if target + i <= 100 and partition[target + i] > 0:
-            return target + i
-        if target - i >= 1 and partition[target - i] > 0:
-            return target - i
-        i += 1
+def can_partition(nums, last_index, sum_value, cache):
+    if sum_value == 0:
+        return True
+    if last_index < 0 or sum_value < 0:
+        return False
+    if (last_index, sum_value) not in cache:
+        cache[(last_index, sum_value)] = (
+            can_partition(nums, last_index - 1, sum_value - nums[last_index], cache
+            )
+            or can_partition(nums, last_index - 1, sum_value, cache)
+        )
+    return cache[(last_index, sum_value)]

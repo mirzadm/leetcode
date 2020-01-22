@@ -4,7 +4,7 @@ from src.p0416_partition_equal_subset_sum import partition_equal_subset_sum as f
 
 class TestCases(unittest.TestCase):
     def test_partition_equal_subset_sum(self):
-        self.assertFalse(func([]))
+        self.assertTrue(func([]))
         self.assertFalse(func([1]))
         self.assertTrue(func([1, 1]))
         self.assertTrue(func([1, 2, 1]))
