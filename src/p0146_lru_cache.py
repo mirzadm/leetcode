@@ -11,7 +11,7 @@ class Node:
 class LRUCache:
     def __init__(self, size):
         if size <= 0:
-            raise RunTimeError(f"Invalid cache size {size}. Size must be > 0.")
+            raise RuntimeError(f"Invalid cache size {size}. Size must be > 0.")
         self.size = size
         self.head = None
         self.tail = None
