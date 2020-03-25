@@ -35,6 +35,7 @@ def tree_to_full_list(root: TreeNode) -> List[TreeNode]:
         level = []
         for _ in range(level_length):
             level.append(q.popleft())
+        level_length *= 2
         if any(level):
             result.extend(level)
             for node in level:
