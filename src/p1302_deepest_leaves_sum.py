@@ -46,10 +46,3 @@ def tree_to_full_list(root: TreeNode) -> List[TreeNode]:
         else:
             deeper_level = False
     return result
-
-
-if __name__ == "__main__":
-    n = TreeNode(1)
-    n.left = TreeNode(2)
-    n.right = TreeNode(3)
-    print(deepest_leaves_sum(n))
