@@ -13,30 +13,6 @@ class BinSearchTree:
     def __init__(self, root):
         self.root = root
 
-    def _convert_binsearch_list_to_tree(keys: List[int]):
-        """Converst a binary search-formatted list to its corresponding binary search tree."""
-        if not keys:
-            return None
-        root = TreeNode(keys[0])
-        nodes = deque()
-        nodes.appendleft(root)
-        for i, key in enumerate(keys):
-            left_child_index = 2 * i + 1
-            right_child_index = 2 * i + 2
-            if left_child_index >= len(keys):
-                break
-            else:
-                parent = nodes.pop()
-                left_child = TreeNode(keys[left_child_index])
-                parent.left = left_child
-                nodes.appendleft(left_child)
-                if right_child_index < len(keys):
-                    right_child = TreeNode(keys[right_child_index])
-                    parent.right = right_child
-                    nodes.appendleft(right_child)
-        del deque
-        return root
-
     def _find_node_and_parent(self, key: int) -> Tuple[Union[TreeNode, None], Union[TreeNode, None]]:
         """Return node containing key and its parent node."""
         parent = None
