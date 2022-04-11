@@ -2,25 +2,26 @@
 
 ## Requirements
 * Python3
+* Pytest
 
 ## Repo structure and naming
 `src/`: Source modules.
 
 `tests/`: Unit tests.
 
-Each source module is the solution to one question. Source modules are named according to problem numbers in Leetcode followed by a short description of problem.
+Each source module is the solution to one question. Source modules are named according to the problem numbers in Leetcode followed by a short description of the problem.
 
 Each source module has its own test file. Test file names follow Python test discovery convention: `test_p{xxxx}.py`
 
 ## Run unit tests
-To run all tests, in repo's root run (note that Python3 is required):
+To run all tests, in the repo root run:
 
 ```
-python -m unittest
+pytest
 ```
 
 To run a specific test file such as `test_p0547.py`:
 
 ```
-python -m unittest tests/test_p0547.py
+pytest tests/test_p0547.py
 ```
