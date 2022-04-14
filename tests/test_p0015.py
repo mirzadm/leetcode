@@ -17,6 +17,5 @@ class TestCases(unittest.TestCase):
         self.assertEqual(sum_n2_partition(
             [-1, -1, 2, -1, -1, 2]), [[-1, -1, 2]]
         )
-        self.assertEqual(sum_n2_partition(
-            [-1, -1, 2, 1, 0, -1]), [[-1, -1, 2], [-1, 0, 1]]
-        )
+        result = sum_n2_partition([-1, -1, 2, 1, 0, -1])
+        self.assertEqual(sorted(result), [[-1, -1, 2], [-1, 0, 1]])
