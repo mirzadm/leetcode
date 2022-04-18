@@ -13,9 +13,9 @@ def test_graph_to_map():
     n1 = Node(1, [n2, n3])
     n2.neighbors = [n1]
     n3.neighbors = [n1]
-    assert graph_to_map[n1] == {1: n1, 2: n2, 3: n3}
-    assert graph_to_map[n2] == {1: n1, 2: n2, 3: n3}
-    assert graph_to_map[n3] == {1: n1, 2: n2, 3: n3}
+    assert graph_to_map(n1) == {1: n1, 2: n2, 3: n3}
+    assert graph_to_map(n2) == {1: n1, 2: n2, 3: n3}
+    assert graph_to_map(n3) == {1: n1, 2: n2, 3: n3}
 
 def is_correct_clone(orig_graph, cloned_graph):
     """Helper function to compare graph-maps of original and cloned graphs."""
@@ -31,8 +31,8 @@ def is_correct_clone(orig_graph, cloned_graph):
         # Compare keys first
         if first[0] != second[0]:
             return False
-        first_neighbor_ids = set(n.val for n in first[1])
-        second_neighbor_ids = set(n.val for n in second[1])
+        first_neighbor_ids = set(n.val for n in first[1].neighbors)
+        second_neighbor_ids = set(n.val for n in second[1].neighbors)
         if first_neighbor_ids != second_neighbor_ids:
             return False
     return True
