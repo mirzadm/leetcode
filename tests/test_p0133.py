@@ -1,55 +1,58 @@
 """Unit tests for problem 133."""
 
 import pytest
-from src.p0133_clone_graph import Node, bfs_traversal, clone_graph
+from src.p0133_clone_graph import Node, graph_to_map, clone_graph
 
 
-def test_bfs_traversal():
-    assert bfs_traversal(None) == []
+def test_graph_to_map():
+    assert graph_to_map(None) == dict()
     n1 = Node(1)
-    assert bfs_traversal(n1) == [n1]
+    assert graph_to_map(n1) == {1: n1}
     n2 = Node(2)
     n3 = Node(3)
     n1 = Node(1, [n2, n3])
     n2.neighbors = [n1]
     n3.neighbors = [n1]
-    assert bfs_traversal[n1] == [n1, n2, n3]
-    assert bfs_traversal[n2] == [n2, n1, n3]
-    assert bfs_traversal[n3] == [n3, n1, n2]
+    assert graph_to_map[n1] == {1: n1, 2: n2, 3: n3}
+    assert graph_to_map[n2] == {1: n1, 2: n2, 3: n3}
+    assert graph_to_map[n3] == {1: n1, 2: n2, 3: n3}
 
-def _test_graph_traversals(first_bfs, second_bfs):
-    """Check if traversals are identically-valued
-    sequences of node and their neighbors.
-    """
-    first_graph_value_serialized = [
-        (node.val, [neighbor.val for neighbor in node.neighbors]) for node in first_bfs
-    ]
-    second_graph_value_serialized = [
-        (node.val, [neighbor.val for neighbor in node.neighbors]) for node in second_bfs
-    ]
-    assert first_graph_value_serialized == second_graph_value_serialized
-
-def _test_graph_disjointness(first_bfs, second_bfs):
-    """Check if two graphs do not share any nodes."""
-    assert set(first_bfs).intersection(set(second_bfs)) == {}
+def is_correct_clone(orig_graph, cloned_graph):
+    """Helper function to compare graph-maps of original and cloned graphs."""
+    # Cloned graph must not share any nodes with the original graph
+    orig_nodes = set(orig_graph.values())
+    cloned_nodes = set(cloned_graph.values())
+    if orig_nodes.intersection(cloned_nodes):
+        return False
+    # Check each nodes neighbors
+    orig_node_tuples = sorted(orig_graph.items())
+    cloned_node_tuples = sorted(cloned_graph.items())
+    for first, second in zip(orig_node_tuples, cloned_node_tuples):
+        # Compare keys first
+        if first[0] != second[0]:
+            return False
+        first_neighbor_ids = set(n.val for n in first[1])
+        second_neighbor_ids = set(n.val for n in second[1])
+        if first_neighbor_ids != second_neighbor_ids:
+            return False
+    return True
 
 def test_clone_graph():
     assert clone_graph(None) == None
     # 1 node
     n1 = Node(1)
-    n1_cloned = clone_graph(n1)
-    bfs = bfs_traversal(n1)
-    clone_bfs = bfs_traversal(n1_cloned)
-    _test_graph_traversals(bfs, clone_bfs)
-    _test_graph_disjointness(bfs, clone_bfs)
+    cloned = clone_graph(n1)
+    assert cloned != n1
+    assert cloned.neighbors == []
+    assert cloned.val == n1.val
     # 3 nodes
+    n1 = Node(1)
     n2 = Node(2)
     n3 = Node(3)
-    n1 = Node(1, [n2, n3])
-    n2.neighbors = [n1]
-    n3.neighbors = [n1]
-    n1_cloned = clone_graph(n1)
-    bfs = bfs_traversal(n1)
-    clone_bfs = bfs_traversal(n1_cloned)
-    _test_graph_traversals(bfs, clone_bfs)
-    _test_graph_disjointness(bfs, clone_bfs)
+    n1.neighbors = [n2, n3]
+    n2.neighbors = [n1, n3]
+    n3.neighbors = [n1, n2]
+    cloned = clone_graph(n1)
+    n1_map = graph_to_map(n1)
+    cloned_map = graph_to_map(cloned)
+    assert is_correct_clone(n1_map, cloned_map) == True
