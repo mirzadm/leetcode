@@ -1,12 +1,14 @@
-"""LRU cache."""
+"""LRU cache.
 
-class Node:
+Implement least-recently-used (LRU) cache as a doubly linked list.
+"""
+
+class Item:
     def __init__(self, key, value):
         self.key = key
         self.value = value
         self.left = None
         self.right = None
-
 
 class LRUCache:
     def __init__(self, size):
@@ -16,72 +18,58 @@ class LRUCache:
         self.head = None
         self.tail = None
         self.length = 0
-        self.map = dict()
+        self.key_value_store = dict()
 
     def get(self, key):
-        if key not in self.map:
+        if key not in self.key_value_store:
             return -1
-        node = self.map[key]
-        self._make_most_recent(node)
-        return node.value
+        item = self.key_value_store[key]
+        self._set_most_recent(item)
+        return item.value
 
     def put(self, key, value):
-        if key not in self.map:
-            if self.length == self.size:
-                self._evict_least_recent()
-            self._add_most_recent(key, value)
+        if key not in self.key_value_store:
+            self._add_new_item(key, value)
         else:
-            node = self.map[key]
-            node.value = value
-            self._make_most_recent(node)
+            item = self.key_value_store[key]
+            item.value = value
+            self._set_most_recent(item)
 
-    def _make_most_recent(self, node):
-        if node == self.head:
+    def _set_most_recent(self, item):
+        if item == self.head:
             return
-        if node == self.tail:
-            right_node = node.right
-            self.tail = right_node
-            right_node.left = None
+        if item == self.tail:
+            right_item = item.right
+            self.tail = right_item
+            right_item.left = None
         else:
-            left_node = node.left
-            right_node = node.right
-            left_node.right = right_node
-            right_node.left = left_node
-        node.right = None
-        node.left = self.head
-        self.head.right = node
-        self.head = node
+            left_item = item.left
+            right_item = item.right
+            left_item.right = right_item
+            right_item.left = left_item
+        item.right = None
+        item.left = self.head
+        self.head.right = item
+        self.head = item
 
     def _evict_least_recent(self):
-        node = self.tail
-        self.map.pop(node.key)
-        self.tail = node.right
+        item = self.tail
+        self.key_value_store.pop(item.key)
+        self.tail = item.right
         if self.tail is None:
             self.head = None
         self.length -= 1
 
-    def _add_most_recent(self, key, value):
-        node = Node(key, value)
-        self.map[key] = node
+    def _add_new_item(self, key, value):
+        if self.length == self.size:
+            self._evict_least_recent()
+        item = Item(key, value)
+        self.key_value_store[key] = item
         if self.head is None:
-            self.head = node
-            self.tail = node
+            self.head = item
+            self.tail = item
         else:
-            self.head.right = node
-            node.left = self.head
-            self.head = node
+            self.head.right = item
+            item.left = self.head
+            self.head = item
         self.length += 1
-
-
-if __name__ == "__main__":
-    c = LRUCache(2)
-    c.put(2, 1)
-    c.put(2, 2)
-    print(c.get(1))
-    c.put(3, 30)
-    print(c.get(2))
-    c.put(4, 40)
-    print(c.get(1))
-    print(c.get(2))
-    print(c.get(3))
-    print(c.get(4))
