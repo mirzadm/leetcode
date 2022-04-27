@@ -13,36 +13,27 @@ class TreeNode:
 
 
 def deepest_leaves_sum(root: TreeNode) -> int:
+    """
+    Returns the sum of leaf node values at the lowest level in a binary tree.
+
+    Uses a modified breadth-first-search traversal that queues a (depth, node) tuple
+    for each new node.
+    """
     if not root:
         return None
-    nodes = tree_to_full_list(root)
-    deepest_level_count = 2 ** math.floor(math.log2(len(nodes)))
-    result = sum(
-        node.val for node in nodes[-deepest_level_count:] if node is not None
-    )
-    return result
-
-
-def tree_to_full_list(root: TreeNode) -> List[TreeNode]:
-    if not root:
-        return []
-    q = deque()
-    q.append(root)
-    result = []
-    deeper_level = True
-    level_length = 1
-    while deeper_level:
-        level = []
-        for _ in range(level_length):
-            level.append(q.popleft())
-        level_length *= 2
-        if any(level):
-            result.extend(level)
-            for node in level:
-                if node is None:
-                    q.extend([None, None])
-                else:
-                    q.extend([node.left, node.right])
+    bfs_queue = deque() # A queue to push/pop nodes in breadth-first-search order
+    current_depth = 0 # Current tree depth
+    current_depth_sum = 0 # Sum of node values in the current depth
+    bfs_queue.appendleft((0, root))
+    while bfs_queue:
+        depth, node = bfs_queue.pop()
+        if depth != current_depth:
+            current_depth_sum = node.val
+            current_depth = depth
         else:
-            deeper_level = False
-    return result
+            current_depth_sum += node.val
+        if node.left:
+            bfs_queue.appendleft((current_depth + 1, node.left))
+        if node.right:
+            bfs_queue.appendleft((current_depth + 1, node.right))
+    return current_depth_sum
