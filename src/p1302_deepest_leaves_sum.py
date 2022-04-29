@@ -1,8 +1,6 @@
 """Given a binary tree, return the sum of values of its deepest leaves."""
 
-import math
 from collections import deque
-from typing import List
 
 
 class TreeNode:
@@ -19,8 +17,6 @@ def deepest_leaves_sum(root: TreeNode) -> int:
     Uses a modified breadth-first-search traversal that queues a (depth, node) tuple
     for each new node.
     """
-    if not root:
-        return None
     bfs_queue = deque() # A queue to push/pop nodes in breadth-first-search order
     current_depth = 0 # Current tree depth
     current_depth_sum = 0 # Sum of node values in the current depth
