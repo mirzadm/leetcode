@@ -1,4 +1,4 @@
-"""Problem 382: Return a random node's value from a linked list."""
+"""Problem 382: Return a random node value from a linked list."""
 
 from random import randrange
 
@@ -8,39 +8,35 @@ class ListNode:
         self.value = value
         self.next = None
 
+def get_linked_list_length(head: ListNode) -> int:
+    """
+    Returns the length of a linked list given a head pointer.
+    """
+    length = 0
+    while head is not None:
+        head = head.next
+        length += 1
+    return length
 
-class RandomNode:
-    def __init__(self, head: ListNode):
-        self.head = head
+def get_linked_list_node(head: ListNode, index: int) -> ListNode:
+    """
+    Returns a pointer to node at index (starting from 0).
+    """
+    while (head is not None) and (index > 0):
+        head = head.next
+        index -= 1
+    if head is None:
+        raise RuntimeError(f"Linked list does not have a node at index {index}!")
+    return head
 
-    def random_node(self, rand_func=randrange) -> int:
-        """Returns a random value from linked list.
 
-        Args:
-            `rand_func`: Optional random generator function as an argument.
-                It allows for mocking the random generator in unit testing.
-        Returns:
-            Random value from linked list (integer).
-        """
-        faster = self.head
-        slower = self.head
-        k = 0
-        while faster is not None and faster.next is not None:
-            faster = faster.next.next
-            slower = slower.next
-            k += 1
-        if faster is None:
-            n = 2 * k
-        else:
-            n = 2 * k + 1
-        random_index = rand_func(n)
-        if random_index <= n / 2:
-            pointer = self.head
-        else:
-            pointer = slower
-            random_index -= n / 2
-        i = 0
-        while i < random_index:
-            pointer = pointer.next
-            i += 1
-        return pointer.value
+def random_node_value(head: ListNode) -> int:
+    """
+    Returns a random value from a linked list.
+    """
+    if head is None:
+        raise ValueError("Linedlist is empty!")
+    length = get_linked_list_length(head)
+    random_index = randrange(length)
+    random_node_pointer = get_linked_list_node(random_index)
+    return random_node_pointer.value
