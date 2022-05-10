@@ -38,5 +38,5 @@ def random_node_value(head: ListNode) -> int:
         raise ValueError("Linedlist is empty!")
     length = get_linked_list_length(head)
     random_index = randrange(length)
-    random_node_pointer = get_linked_list_node(random_index)
-    return random_node_pointer.value
+    random_node = get_linked_list_node(head, random_index)
+    return random_node.value

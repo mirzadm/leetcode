@@ -29,3 +29,13 @@ def test_get_linked_list_node():
     assert get_linked_list_node(head, 1) == head.next
     with pytest.raises(RuntimeError):
         get_linked_list_node(head, 2)
+
+
+def test_random_node_value():
+    with pytest.raises(ValueError):
+        random_node_value(None)
+    head = ListNode(10)
+    assert random_node_value(head) == 10
+    head = ListNode(10)
+    head.next = ListNode(20)
+    assert random_node_value(head) in (10, 20)
