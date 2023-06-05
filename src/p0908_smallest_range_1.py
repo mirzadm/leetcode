@@ -1,4 +1,7 @@
-"""Problem 908: Smallest Range I"""
+"""Problem 908: Smallest Range I
+
+Find the smallest range in an arry of numbers by modifying each element by a number in [-k, k].
+"""
 
 from typing import List
 
