@@ -12,13 +12,13 @@ Constraints:
     src != dst
 
 Algorithm
-    Uses a BFS approach that accounts multiple visits to each node.
-    As long as we meet number of stops requirement and a higher number of stops
-    results in a lower tatal price.
+    Uses a BFS approach that accounts for multiple visits to each node.
+    As long as we meet the requirement on number of stops and a higher
+    number of stops results in a lower tatal price.
 """
 
 from typing import List, Dict, Tuple
-from collections import deque
+from collections import deque, namedtuple
 
 
 def find_cheapest_price(
@@ -26,47 +26,43 @@ def find_cheapest_price(
 ) -> int:
     graph = _model_as_graph(n, flights)
     city_queue = deque()
-    city_queue.appendleft((src, -1, 0))
-    min_price_paths = {src: [{"stops": -1, "price": 0}]}
+    min_price_paths = {}
+    StopsPrice = namedtuple("StopsPrice", "stops, price")
+    CityStopsPrice = namedtuple("CityStopsPrice", "city, stops, price")
+    city_queue.appendleft(CityStopsPrice(city=src, stops=-1, price=0))
+    min_price_paths[src] = [StopsPrice(stops=-1, price=0)]
     while city_queue:
-        current_city, current_stops, current_price = city_queue.pop()
-        if current_stops < k:
-            for neighbor, price in graph[current_city]:
+        current = city_queue.pop()
+        if current.stops < k:
+            for neighbor, price in graph[current.city]:
                 should_append = False
                 if neighbor not in min_price_paths:
                     min_price_paths[neighbor] = [
-                        {
-                            "stops": current_stops + 1,
-                            "price": current_price + price,
-                        }
+                        StopsPrice(stops=current.stops + 1, price=current.price + price)
                     ]
                     should_append = True
                 else:
-                    last_stops, last_price = min_price_paths[neighbor][-1].values()
-                    if current_price + price < last_price:
-                        if last_stops == current_stops + 1:
-                            min_price_paths[neighbor][-1]["price"] = (
-                                current_price + price
+                    last = min_price_paths[neighbor][-1]
+                    if current.price + price < last.price:
+                        if last.stops == current.stops + 1:
+                            min_price_paths[neighbor].pop()
+                        min_price_paths[neighbor].append(
+                            StopsPrice(
+                                stops=current.stops + 1, price=current.price + price
                             )
-                        else:
-                            min_price_paths[neighbor].append(
-                                {
-                                    "stops": current_stops + 1,
-                                    "price": current_price + price,
-                                }
-                            )
+                        )
                         should_append = True
                 if should_append:
                     city_queue.appendleft(
-                        (
-                            neighbor,
-                            min_price_paths[neighbor][-1]["stops"],
-                            min_price_paths[neighbor][-1]["price"],
+                        CityStopsPrice(
+                            city=neighbor,
+                            stops=min_price_paths[neighbor][-1].stops,
+                            price=min_price_paths[neighbor][-1].price,
                         )
                     )
     if dst not in min_price_paths:
         return -1
-    return min_price_paths[dst][-1]["price"]
+    return min_price_paths[dst][-1].price
 
 
 def _model_as_graph(
